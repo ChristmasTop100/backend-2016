@@ -12,10 +12,10 @@ class Song extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'url', 'image',
+        'title', 'artist', 'url', 'image',
     ];
 
-    public function vote() {
+    public function votes() {
         return $this->hasMany('App\Vote');
     }
 }

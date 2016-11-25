@@ -10,7 +10,7 @@ class VotingController extends Controller
     public function index() {
         if (Auth::check()) {
             $songs = Song::with([
-                'vote' => function ($query) {
+                'votes' => function ($query) {
                     $query->where('user_id', Auth::user()->id);
                 }
             ])->get();

@@ -153,7 +153,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Folklore\GraphQL\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -208,6 +208,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'GraphQL' => Folklore\GraphQL\Support\Facades\GraphQL::class,
 
     ],
 
