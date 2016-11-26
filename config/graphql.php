@@ -97,7 +97,7 @@ return [
             ],
             'mutation' => [
                 // Give score
-                // Create session?
+                'CreateSession' => 'App\GraphQL\Query\CreateSessionMutation'
             ]
         ]
     ],
@@ -120,7 +120,8 @@ return [
     'types' => [
         'App\GraphQL\Type\UserType',
         'App\GraphQL\Type\SongType',
-        'App\GraphQL\Type\VoteType'
+        'App\GraphQL\Type\VoteType',
+        'App\GraphQL\Type\SessionType'
     ],
     
     // This callable will received every Error objects for each errors GraphQL catch.
