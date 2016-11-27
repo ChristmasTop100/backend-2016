@@ -50,7 +50,7 @@ return [
     'variables_input_name' => 'params',
 
     // Any middleware for the graphql route group
-    'middleware' => [],
+    'middleware' => ['cors'],
     
     // Config for GraphiQL (https://github.com/graphql/graphiql).
     // To disable GraphiQL, set this to null.
