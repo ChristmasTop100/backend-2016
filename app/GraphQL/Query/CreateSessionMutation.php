@@ -5,6 +5,7 @@ namespace App\GraphQL\Query;
 use GraphQL;
 use Folklore\GraphQL\Support\Mutation;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Support\Facades\Auth;
 use JWTAuth;
 
 class CreateSessionMutation extends Mutation{
@@ -27,6 +28,10 @@ class CreateSessionMutation extends Mutation{
 
   public function resolve($root, $args)
   {
+    if (Auth::check()) {
+      return ['error' => 'logged_in'];
+    }
+
     if (! $token = JWTAuth::attempt(['email' => $args['email'], 'password' => $args['password']])) {
       return ['error' => 'invalid_credentials'];
     }
