@@ -15,6 +15,10 @@ class SongType extends GraphQLType {
   public function fields()
   {
     return [
+      'id' => [
+        'type' => Type::int(),
+        'description' => 'The id of the song',
+      ],
       'title' => [
         'type' => Type::nonNull(Type::string()),
         'description' => 'The title of the song'

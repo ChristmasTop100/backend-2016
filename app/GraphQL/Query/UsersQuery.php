@@ -7,6 +7,7 @@ use GraphQL\Type\Definition\Type;
 use Folklore\GraphQL\Support\Query;
 use GraphQL\Type\Definition\ResolveInfo;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class UsersQuery extends Query {
   protected $attributes = [
@@ -32,19 +33,19 @@ class UsersQuery extends Query {
 
     foreach ($fields as $field => $keys) {
       if ($field === 'votes') {
-        $users->with('Votes');
+        $users->with([
+          'votes' => function ($query) {
+            $query->where('user_id', Auth::user()->id);
+          }
+        ]);
       }
     }
 
-    return $users->get();
-
     if(isset($args['id']))
     {
-      return User::where('id' , $args['id'])->get();
+      $users->where('id' , $args['id']);
     }
-    else
-    {
-      return User::all();
-    }
+
+    return $users->get();
   }
 }

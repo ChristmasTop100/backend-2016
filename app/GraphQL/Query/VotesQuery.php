@@ -6,6 +6,8 @@ use GraphQL;
 use GraphQL\Type\Definition\Type;
 use Folklore\GraphQL\Support\Query;
 use App\Vote;
+use Illuminate\Support\Facades\Auth;
+use GraphQL\Type\Definition\ResolveInfo;
 
 class VotesQuery extends Query {
   protected $attributes = [
@@ -20,24 +22,37 @@ class VotesQuery extends Query {
   public function args()
   {
     return [
-      'song_id' => ['name' => 'song_id', 'type' => Type::int()],
-      'user_id' => ['name' => 'song_id', 'type' => Type::int()]
+      'song_id' => ['name' => 'song_id', 'type' => Type::int()]
     ];
   }
 
-  public function resolve($root, $args)
+  public function resolve($root, $args, $context, ResolveInfo $info)
   {
+    if (! Auth::check()) {
+      return [];
+    }
+
+    $fields = $info->getFieldSelection($depth = 3);
+    $votes = Vote::query();
+    $votes->where('user_id', Auth::user()->id);
+
+    foreach ($fields as $field => $keys) {
+      if ($field === 'users')
+      {
+        $votes->with('users');
+      }
+
+      if ($field === 'songs')
+      {
+        $votes->with('songs');
+      }
+    }
+
     if(isset($args['song_id']))
     {
-      return Vote::where('song_id' , $args['song_id'])->get();
+      $votes->where('song_id' , $args['song_id']);
     }
-    else if(isset($args['user_id']))
-    {
-      return Vote::where('user_id' , $args['user_id'])->get();
-    }
-    else
-    {
-      return Vote::all();
-    }
+
+    return $votes->get();
   }
 }

@@ -7,6 +7,7 @@ use GraphQL\Type\Definition\Type;
 use Folklore\GraphQL\Support\Query;
 use GraphQL\Type\Definition\ResolveInfo;
 use App\Song;
+use Illuminate\Support\Facades\Auth;
 
 class SongsQuery extends Query {
   protected $attributes = [
@@ -21,7 +22,7 @@ class SongsQuery extends Query {
   public function args()
   {
     return [
-      'title' => ['name' => 'title', 'type' => Type::string()]
+      'id' => ['name' => 'id', 'type' => Type::int()]
     ];
   }
 
@@ -33,19 +34,19 @@ class SongsQuery extends Query {
 
     foreach ($fields as $field => $keys) {
       if ($field === 'votes') {
-        $songs->with('Votes');
+        $songs->with([
+          'votes' => function ($query) {
+            $query->where('user_id', Auth::user()->id);
+          }
+        ]);
       }
     }
 
-    return $songs->get();
+    if(isset($args['id']))
+    {
+      $songs->where('id' , $args['id']);
+    }
 
-    if(isset($args['title']))
-    {
-      return Song::where('title' , $args['title'])->get();
-    }
-    else
-    {
-      return Song::all();
-    }
+    return $songs->get();
   }
 }
