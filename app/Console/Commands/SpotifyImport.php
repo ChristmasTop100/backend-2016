@@ -39,14 +39,16 @@ class SpotifyImport extends Command
             Song::truncate();
 
             Song::insert(collect($playlist->tracks->items)->map(function ($item) {
-                $this->info('Importing -> ' . $item->track->name . ' - ' . collect($item->track->artists)->implode('name', ', '));
-
-                return [
+                $song = [
                     'image' => $item->track->album->images[0]->url,
                     'url'   => $item->track->external_urls->spotify,
                     'title'  => $item->track->name,
                     'artist' => collect($item->track->artists)->implode('name', ', '),
                 ];
+
+                $this->info("Importing {$song['title']} - {$song['artist']}");
+
+                return $song;
             })->toArray());
 
             DB::statement('SET FOREIGN_KEY_CHECKS = 1');
