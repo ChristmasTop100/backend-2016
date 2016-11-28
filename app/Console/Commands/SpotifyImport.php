@@ -31,11 +31,12 @@ class SpotifyImport extends Command
 
         $playlist = $api->getUserPlaylist(config('spotify.playlist.author'), config('spotify.playlist.id'));
 
-        $this->info('Removing all old songs.');
-
         DB::transaction(function () use ($playlist) {
             // Disable foreign key checks so the vote table stays correct.
             DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+
+            $this->info('Removing all old songs.');
+            
             Song::truncate();
 
             Song::insert(collect($playlist->tracks->items)->map(function ($item) {
