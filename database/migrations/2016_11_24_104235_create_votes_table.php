@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class CreateVotesTable extends Migration
 {
@@ -12,11 +13,12 @@ class CreateVotesTable extends Migration
      */
     public function up()
     {
-        Schema::create('votes', function(Blueprint $table)
+        Schema::create('votes', function (Blueprint $table)
         {
             $table->increments('id');
             $table->integer('user_id');
-            $table->integer('song_id');
+            $table->integer('song_id')->unsigned();
+            $table->foreign('song_id')->references('id')->on('songs');
             $table->integer('score');
             $table->timestamps();
         });

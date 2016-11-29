@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8f0979fc918f623660611417d8f49a3c",
-    "content-hash": "4f3291f3f1ed54eaf52e4e2889b29d8e",
+    "hash": "74d1c9c6cd4305b56dd18ebc264922ec",
+    "content-hash": "5ffdf6f1f675304147ef13b6fcb0fc51",
     "packages": [
         {
             "name": "barryvdh/laravel-cors",
@@ -417,6 +417,52 @@
                 "tokenizer"
             ],
             "time": "2015-12-05 17:17:57"
+        },
+        {
+            "name": "jwilsson/spotify-web-api-php",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jwilsson/spotify-web-api-php.git",
+                "reference": "c5ff81911ac04b54b596ab77c87d98ebd40b25e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/c5ff81911ac04b54b596ab77c87d98ebd40b25e2",
+                "reference": "c5ff81911ac04b54b596ab77c87d98ebd40b25e2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": "^5.5 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0",
+                "satooshi/php-coveralls": "dev-master",
+                "squizlabs/php_codesniffer": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SpotifyWebAPI\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Wilsson",
+                    "email": "jonathan.wilsson@gmail.com"
+                }
+            ],
+            "description": "A PHP wrapper for Spotify's Web API.",
+            "homepage": "http://jwilsson.github.io/spotify-web-api-php/",
+            "keywords": [
+                "spotify"
+            ],
+            "time": "2016-10-27 16:46:42"
         },
         {
             "name": "laravel/framework",
