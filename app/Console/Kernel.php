@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         // Commands\Inspire::class,
         Commands\SpotifyImport::class,
         Commands\SpotifyExport::class,
+        Commands\OneTimeLogin::class,
     ];
 
     /**
