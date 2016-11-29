@@ -32,9 +32,7 @@ class SpotifyImport extends Command
         $playlist = $api->getUserPlaylist(config('spotify.playlist.author'), config('spotify.playlist.id'));
 
         DB::transaction(function () use ($playlist) {
-            $existingSongs = Song::all();
-
-            $existingPlaylistSongs = collect($playlist->tracks->items)->map(function ($item) use ($existingSongs) {
+            $existingPlaylistSongs = collect($playlist->tracks->items)->map(function ($item) {
                 $song = [
                     'image' => $item->track->album->images[0]->url,
                     'url'   => $item->track->external_urls->spotify,
@@ -42,23 +40,12 @@ class SpotifyImport extends Command
                     'artist' => collect($item->track->artists)->implode('name', ', '),
                 ];
 
-                if (! empty($existingSongs->where('url', $song['url'])->all())) {
-                    Song::where('url', $song['url'])->update($song);
-                    $this->info("Updating: {$song['title']} - {$song['artist']}");
-                } else {
-                    Song::create($song);
-                    $this->info("Creating: {$song['title']} - {$song['artist']}");
-                }
+                Song::updateOrCreate(['url' => $song['url']], $song);
 
                 return $song['url'];
             })->toArray();
 
-            Song::whereNotIn('url', $existingPlaylistSongs)->get()->map(function ($song) {
-                $this->info("Removing: {$song['title']} - {$song['artist']}");
-                $song->delete();
-            });
-
-            $this->info('Done!');
+            Song::whereNotIn('url', $existingPlaylistSongs)->delete();
         });
     }
 }
