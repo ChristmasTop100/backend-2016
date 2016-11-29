@@ -18,7 +18,7 @@ class CreateVotesTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->integer('song_id')->unsigned();
-            $table->foreign('song_id')->references('id')->on('songs');
+            $table->foreign('song_id')->references('id')->on('songs')->onDelete('cascade');;
             $table->integer('score');
             $table->timestamps();
         });

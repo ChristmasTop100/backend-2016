@@ -32,14 +32,10 @@ class SpotifyImport extends Command
         $playlist = $api->getUserPlaylist(config('spotify.playlist.author'), config('spotify.playlist.id'));
 
         DB::transaction(function () use ($playlist) {
-            // Disable foreign key checks so the vote table stays correct.
-            DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+            $existingSongs = Song::all();
+            $playlistTracks = collect($playlist->tracks->items);
 
-            $this->info('Removing all old songs.');
-            
-            Song::truncate();
-
-            Song::insert(collect($playlist->tracks->items)->map(function ($item) {
+            $existingPlaylistSongs = $playlistTracks->map(function ($item) use ($existingSongs) {
                 $song = [
                     'image' => $item->track->album->images[0]->url,
                     'url'   => $item->track->external_urls->spotify,
@@ -47,12 +43,22 @@ class SpotifyImport extends Command
                     'artist' => collect($item->track->artists)->implode('name', ', '),
                 ];
 
-                $this->info("Importing {$song['title']} - {$song['artist']}");
+                if (! empty($existingSongs->where('url', $song['url'])->all())) {
+                    Song::where('url', $song['url'])->update($song);
+                    $this->info("Updating: {$song['title']} - {$song['artist']}");
+                } else {
+                    Song::create($song);
+                    $this->info("Creating: {$song['title']} - {$song['artist']}");
+                }
 
-                return $song;
-            })->toArray());
+                return $song['url'];
+            })->toArray();
 
-            DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+            Song::whereNotIn('url', $existingPlaylistSongs)->get()->map(function ($song) {
+                $this->info("Removing: {$song['title']} - {$song['artist']}");
+                $song->delete();
+            });
+
             $this->info('Done!');
         });
     }
