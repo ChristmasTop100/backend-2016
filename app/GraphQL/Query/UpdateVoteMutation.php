@@ -30,11 +30,11 @@ class UpdateVoteMutation extends Mutation{
   public function resolve($root, $args)
   {
     if (! Auth::check()) {
-      return null;
+      Throw new GraphQL\Error('You need to be logged in to vote.');
     }
 
     if ($args['score'] < 0 || $args['score'] > 100) {
-      return null;
+      Throw new GraphQL\Error('You can only give scores between 0 and 100.');
     }
 
     $user_id = Auth::user()->id;
@@ -44,7 +44,7 @@ class UpdateVoteMutation extends Mutation{
       ->get()
       ->pluck('score');
     if (($scores->sum() + $args['score']) > 100) {
-      return null;
+      Throw new GraphQL\Error('The sum of all your votes may not exceed 100.');
     }
 
     $vote = Vote::firstOrNew(compact(['song_id', 'user_id']));
