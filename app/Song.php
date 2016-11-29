@@ -15,6 +15,8 @@ class Song extends Model
         'title', 'artist', 'url', 'image',
     ];
 
+    public $timestamps = false;
+
     public function votes() {
         return $this->hasMany('App\Vote');
     }

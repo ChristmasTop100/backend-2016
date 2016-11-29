@@ -32,14 +32,7 @@ class SpotifyImport extends Command
         $playlist = $api->getUserPlaylist(config('spotify.playlist.author'), config('spotify.playlist.id'));
 
         DB::transaction(function () use ($playlist) {
-            // Disable foreign key checks so the vote table stays correct.
-            DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-
-            $this->info('Removing all old songs.');
-            
-            Song::truncate();
-
-            Song::insert(collect($playlist->tracks->items)->map(function ($item) {
+            $existingPlaylistSongs = collect($playlist->tracks->items)->map(function ($item) {
                 $song = [
                     'image' => $item->track->album->images[0]->url,
                     'url'   => $item->track->external_urls->spotify,
@@ -47,13 +40,12 @@ class SpotifyImport extends Command
                     'artist' => collect($item->track->artists)->implode('name', ', '),
                 ];
 
-                $this->info("Importing {$song['title']} - {$song['artist']}");
+                Song::updateOrCreate(['url' => $song['url']], $song);
 
-                return $song;
-            })->toArray());
+                return $song['url'];
+            })->toArray();
 
-            DB::statement('SET FOREIGN_KEY_CHECKS = 1');
-            $this->info('Done!');
+            Song::whereNotIn('url', $existingPlaylistSongs)->delete();
         });
     }
 }
