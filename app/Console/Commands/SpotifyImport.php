@@ -33,9 +33,8 @@ class SpotifyImport extends Command
 
         DB::transaction(function () use ($playlist) {
             $existingSongs = Song::all();
-            $playlistTracks = collect($playlist->tracks->items);
 
-            $existingPlaylistSongs = $playlistTracks->map(function ($item) use ($existingSongs) {
+            $existingPlaylistSongs = collect($playlist->tracks->items)->map(function ($item) use ($existingSongs) {
                 $song = [
                     'image' => $item->track->album->images[0]->url,
                     'url'   => $item->track->external_urls->spotify,
