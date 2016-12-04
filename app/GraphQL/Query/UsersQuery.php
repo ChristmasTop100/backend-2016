@@ -31,15 +31,18 @@ class UsersQuery extends Query {
     $fields = $info->getFieldSelection($depth = 3);
     $users = User::query();
 
-    foreach ($fields as $field => $keys) {
-      if ($field === 'votes') {
-        $users->with([
-          'votes' => function ($query) {
-            $query->where('user_id', Auth::user()->id);
+      foreach ($fields as $field => $keys) {
+          if ($field === 'votes') {
+              $users->with(
+                [
+                  'votes' => function ($query) {
+                      $user_id = Auth::check() ? Auth::user()->id : 0;
+                      $query->where('user_id', $user_id);
+                  },
+                ]
+              );
           }
-        ]);
       }
-    }
 
     if(isset($args['id']))
     {
