@@ -33,8 +33,8 @@ class UpdateVoteMutation extends Mutation{
       Throw new GraphQL\Error('You need to be logged in to vote.');
     }
 
-    if ($args['score'] < 0 || $args['score'] > 100) {
-      Throw new GraphQL\Error('You can only give scores between 0 and 100.');
+    if ($args['score'] < 0 || $args['score'] > 20) {
+      Throw new GraphQL\Error('You can only give scores between 0 and 20.');
     }
 
     $user_id = Auth::user()->id;
