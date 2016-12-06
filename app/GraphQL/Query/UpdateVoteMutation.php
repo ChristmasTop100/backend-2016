@@ -46,11 +46,7 @@ class UpdateVoteMutation extends Mutation{
     if (($scores->sum() + $args['score']) > 100) {
       Throw new GraphQL\Error('The sum of all your votes may not exceed 100.');
     }
-
-    $vote = Vote::firstOrNew(compact(['song_id', 'user_id']));
-    $vote->score = $args['score'];
-    $vote->save();
-
-    return $vote;
+    
+    return Vote::updateOrCreate(compact(['song_id', 'user_id]), ['score' => $args['score']]);
   }
 }
