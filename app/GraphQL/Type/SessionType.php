@@ -4,6 +4,7 @@ namespace app\GraphQL\Type;
 
 use GraphQL\Type\Definition\Type;
 use Folklore\GraphQL\Support\Type as GraphQLType;
+use Folklore\GraphQL\Support\Facades\GraphQL;
 
 class SessionType extends GraphQLType{
   protected $attributes = [
@@ -18,9 +19,9 @@ class SessionType extends GraphQLType{
         'type' => Type::string(),
         'description' => 'The session token'
       ],
-      'error' => [
-        'type' => Type::string(),
-        'description' => 'The error message if something went wrong'
+      'user' => [
+        'type' => GraphQL::type('User'),
+        'description' => 'The user that is logged in.'
       ]
     ];
   }

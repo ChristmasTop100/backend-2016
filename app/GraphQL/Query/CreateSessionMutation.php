@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Query;
 
+use App\User;
 use GraphQL;
 use Folklore\GraphQL\Support\Mutation;
 use GraphQL\Type\Definition\Type;
@@ -54,6 +55,7 @@ class CreateSessionMutation extends Mutation
             Throw new GraphQL\Error('Invalid credentials');
         }
 
-        return compact('token');
+        $user = User::where('email', $args['email'])->first();
+        return compact('token', 'user');
     }
 }

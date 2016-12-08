@@ -98,7 +98,8 @@ return [
             'mutation' => [
                 // Give score
                 'CreateSession' => 'App\GraphQL\Query\CreateSessionMutation',
-                'UpdateVote' => 'App\GraphQL\Query\UpdateVoteMutation'
+                'UpdateVote' => 'App\GraphQL\Query\UpdateVoteMutation',
+                'UpdateUser' => 'App\GraphQL\Query\UpdateUserMutation'
             ]
         ]
     ],
