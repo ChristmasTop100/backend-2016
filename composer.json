@@ -10,7 +10,8 @@
         "folklore/graphql": "~1.0",
         "tymon/jwt-auth": "^0.5.9",
         "barryvdh/laravel-cors": "^0.8.2",
-        "jwilsson/spotify-web-api-php": "^1.4"
+        "jwilsson/spotify-web-api-php": "^1.4",
+        "guzzlehttp/guzzle": "~5.3|~6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
