@@ -399,7 +399,7 @@
 
                                                 <td valign="top" class="mcnTextContent" style="padding-top: 9px;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #202020;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;">
 
-                                                    <img src="https://christmastop100.nl/static/media/logo.e6ca5541.svg" style="display: block;float: left;width: 100px; padding-right: 20px" /><h1 class="null" style="color: #ed215d;text-align: center;display: block;margin: 0;padding: 0;font-style: normal;line-height: 125%;letter-spacing: normal;font-family:Roboto, sans-serif;font-weight: lighter;">Christmas <span style="font-weight:bold;">Top&nbsp;100</span></h1>
+                                                    <img src="https://christmastop100.nl/static/media/logo.e6ca5541.svg" style="display: block;float: left;width: 100px; padding-right: 10px" /><h1 class="null" style="color: #ed215d;text-align: left;display: block;margin: 0;padding: 0;font-style: normal;line-height: 125%;letter-spacing: normal;font-family:Roboto, sans-serif;font-weight: lighter;">Christmas <span style="font-weight:bold;">Top&nbsp;100</span></h1>
 
                                                 </td>
                                             </tr>
