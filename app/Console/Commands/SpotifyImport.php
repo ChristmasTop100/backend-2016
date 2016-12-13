@@ -30,22 +30,37 @@ class SpotifyImport extends Command
         $api->setAccessToken($session->getAccessToken());
 
         $playlist = $api->getUserPlaylist(config('spotify.playlist.author'), config('spotify.playlist.id'));
+        $offset = 0;
+        $existingPlaylistSongs = [];
+        while ($offset + 100 < $playlist->tracks->total) {
+            $offset += 100;
+            $existingPlaylistSongs = $this->importSongs($playlist);
+            $playlist = $api->getUserPlaylist(config('spotify.playlist.author'), config('spotify.playlist.id'), ['offset' => $offset]);
+        }
 
-        DB::transaction(function () use ($playlist) {
-            $existingPlaylistSongs = collect($playlist->tracks->items)->map(function ($item) {
-                $song = [
-                    'image' => $item->track->album->images[0]->url,
-                    'url'   => $item->track->external_urls->spotify,
-                    'title'  => $item->track->name,
-                    'artist' => collect($item->track->artists)->implode('name', ', '),
-                ];
+        Song::whereNotIn('url', $existingPlaylistSongs)->delete();
+    }
 
-                Song::updateOrCreate(['url' => $song['url']], $song);
+    protected function importSongs($playlist) {
+        return DB::transaction(function () use ($playlist) {
+            return collect($playlist->tracks->items)->map(
+                function ($item) {
+                    $song = [
+                        'image' => $item->track->album->images[0]->url,
+                        'url' => $item->track->external_urls->spotify,
+                        'title' => $item->track->name,
+                        'artist' => collect($item->track->artists)->implode(
+                            'name',
+                            ', '
+                        ),
+                    ];
+echo $song['title'];
+                    Song::updateOrCreate(['url' => $song['url']], $song);
 
-                return $song['url'];
-            })->toArray();
-
-            Song::whereNotIn('url', $existingPlaylistSongs)->delete();
+                    return $song['url'];
+                }
+            )->toArray();
         });
     }
+
 }
