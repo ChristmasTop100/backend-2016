@@ -29,21 +29,24 @@ class SpotifyImport extends Command
         $session->requestCredentialsToken([]);
         $api->setAccessToken($session->getAccessToken());
 
-        $playlist = $api->getUserPlaylist(config('spotify.playlist.author'), config('spotify.playlist.id'));
         $offset = 0;
         $existingPlaylistSongs = [];
-        while ($offset < $playlist->tracks->total) {
-            $existingPlaylistSongs = $this->importSongs($playlist);
-            $playlist = $api->getUserPlaylist(config('spotify.playlist.author'), config('spotify.playlist.id'), ['offset' => $offset]);
+        while (TRUE) {
+            $playlist = $api->getUserPlaylistTracks(config('spotify.playlist.author'), config('spotify.playlist.id'), ['offset' => $offset, 'limit' => 100]);
+            $existingPlaylistSongs += $this->importSongs($playlist);
+            if ($playlist->total < $offset + 100) {
+              break;
+            }
             $offset += 100;
         }
-
+      echo Song::all()->count();
         Song::whereNotIn('url', $existingPlaylistSongs)->delete();
+        echo Song::all()->count();
     }
 
     protected function importSongs($playlist) {
         return DB::transaction(function () use ($playlist) {
-            return collect($playlist->tracks->items)->map(
+            return collect($playlist->items)->map(
                 function ($item) {
                     $song = [
                         'image' => $item->track->album->images[0]->url,
@@ -54,7 +57,7 @@ class SpotifyImport extends Command
                             ', '
                         ),
                     ];
-echo $song['title'];
+
                     Song::updateOrCreate(['url' => $song['url']], $song);
 
                     return $song['url'];
