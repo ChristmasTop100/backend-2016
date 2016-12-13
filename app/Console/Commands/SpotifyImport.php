@@ -32,10 +32,10 @@ class SpotifyImport extends Command
         $playlist = $api->getUserPlaylist(config('spotify.playlist.author'), config('spotify.playlist.id'));
         $offset = 0;
         $existingPlaylistSongs = [];
-        while ($offset + 100 < $playlist->tracks->total) {
-            $offset += 100;
+        while ($offset < $playlist->tracks->total) {
             $existingPlaylistSongs = $this->importSongs($playlist);
             $playlist = $api->getUserPlaylist(config('spotify.playlist.author'), config('spotify.playlist.id'), ['offset' => $offset]);
+            $offset += 100;
         }
 
         Song::whereNotIn('url', $existingPlaylistSongs)->delete();
