@@ -33,15 +33,13 @@ class SpotifyImport extends Command
         $existingPlaylistSongs = [];
         while (TRUE) {
             $playlist = $api->getUserPlaylistTracks(config('spotify.playlist.author'), config('spotify.playlist.id'), ['offset' => $offset, 'limit' => 100]);
-            $existingPlaylistSongs += $this->importSongs($playlist);
+            $existingPlaylistSongs = array_merge($existingPlaylistSongs, $this->importSongs($playlist));
             if ($playlist->total < $offset + 100) {
               break;
             }
             $offset += 100;
         }
-      echo Song::all()->count();
         Song::whereNotIn('url', $existingPlaylistSongs)->delete();
-        echo Song::all()->count();
     }
 
     protected function importSongs($playlist) {
