@@ -20,7 +20,7 @@ class SpotifyExport extends Command
 
     public function handle()
     {
-        Song::with('votes')->get()->sortByAsc(function ($song) {
+        Song::with('votes')->get()->sortBy(function ($song) {
             return $song->votes->sum('score');
         })->map(function ($song) {
             $this->info($song->url);
